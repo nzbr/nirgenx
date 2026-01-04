@@ -60,21 +60,25 @@
           };
 
           packages = {
-            helm-update = pkgs.substituteAll {
+            helm-update = pkgs.replaceVarsWith {
               name = "helm-update";
               src = ./script/helm-update.py;
               dir = "bin";
               isExecutable = true;
-              inherit (pkgs) nix;
-              python3 = pkgs.python3.withPackages (p: [ p.pyyaml ]);
+              replacements = {
+                inherit (pkgs) nix;
+                python3 = pkgs.python3.withPackages (p: [ p.pyyaml ]);
+              };
             };
-            yaml2nix = pkgs.substituteAll {
+            yaml2nix = pkgs.replaceVarsWith {
               name = "yaml2nix";
               src = ./script/yaml2nix.sh;
               dir = "bin";
               isExecutable = true;
-              inherit (pkgs) bash nix remarshal;
-              nixfmt = pkgs.nixfmt-rfc-style;
+              replacements = {
+                inherit (pkgs) bash nix remarshal;
+                nixfmt = pkgs.nixfmt-rfc-style;
+              };
             };
           };
 
